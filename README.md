@@ -13,6 +13,10 @@ Launch the game through Steam. Check `mixed_input_fix.log` in the game directory
 
 If you're on Linux, set the game's launch options to `WINEDLLOVERRIDES="version=n,b" %command%` or else the DLL won't load. Yes you can run Gamescope and whatever other bells and whistles with this, just stick the WINEDLLOVERRIDES part at the very beginning of the command.
 
+## Game version support
+
+This worked when I built it, with whatever game version was the newest at that time. If it doesn't work anymore make an issue and I might fix see if it can be fixed. The patches aren't super robust against binary changes from updates so this is liable to break.
+
 This is completely built around Steam Input. No it will not work with the EGS version, no it will not work with your pirated copy unless Steam emulators have massively stepped up their Steam Input emulation game since I last looked. Yes a version could theoretically be made that works with those, no I will not make it.
 
 ## Controller support
