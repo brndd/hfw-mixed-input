@@ -1,5 +1,9 @@
 #include "logger.h"
 
+#ifndef MOD_VERSION
+#define MOD_VERSION "dev"
+#endif
+
 static FILE* g_log_file = NULL;
 static CRITICAL_SECTION g_log_lock;
 static bool g_log_initialized = false;
@@ -21,7 +25,7 @@ void log_init(void) {
     g_log_file = fopen(log_path, "w");
     g_log_initialized = true;
     
-    log_info("=== Mixed Input Fix Initialized ===");
+    log_info("=== Mixed Input Fix %s Initialized ===", MOD_VERSION);
 }
 
 static void log_write(const char* level, const char* fmt, va_list args) {

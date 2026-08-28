@@ -4,7 +4,10 @@ Vibe reverse engineered and vibecoded mod to patch mixed input support into Hori
 
 ## Installation
 
-Copy `version.dll` into your *Horizon Forbidden West* game directory (where `HorizonForbiddenWest.exe` is located).
+Copy the following files into your *Horizon Forbidden West* game directory (where `HorizonForbiddenWest.exe` is located):
+- `version.dll`
+- `steam_input_manifest.vdf`
+- `steam_input_steamcontroller.vdf`
 
 Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm initialization (or just, you know, try it). Set in-game mouse sensitivity to 1.0 on all axis for best results with the built-in profile.
 

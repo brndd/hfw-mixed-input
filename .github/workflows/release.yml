@@ -1,0 +1,64 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Windows x64 DLL
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install MinGW toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64 zip
+
+      - name: Determine Version
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "TAG_NAME=${{ github.ref_name }}" >> "$GITHUB_ENV"
+          else
+            echo "TAG_NAME=$(git describe --tags --always --dirty 2>/dev/null || echo dev)" >> "$GITHUB_ENV"
+          fi
+
+      - name: Compile version.dll
+        run: |
+          make clean
+          make GIT_VERSION="${{ env.TAG_NAME }}"
+
+      - name: Package Release Archive
+        run: |
+          ZIP_NAME="hfw-mixed-input-${{ env.TAG_NAME }}.zip"
+          zip "$ZIP_NAME" version.dll steam_input_manifest.vdf steam_input_steamcontroller.vdf README.md
+          echo "ZIP_NAME=$ZIP_NAME" >> "$GITHUB_ENV"
+
+      - name: Upload Artifacts (Actions)
+        uses: actions/upload-artifact@v4
+        with:
+          name: hfw-mixed-input-${{ env.TAG_NAME }}
+          path: |
+            version.dll
+            ${{ env.ZIP_NAME }}
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            version.dll
+            ${{ env.ZIP_NAME }}
+          generate_release_notes: true
