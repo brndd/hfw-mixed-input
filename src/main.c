@@ -2,6 +2,7 @@
 #include "logger.h"
 #include "proxy.h"
 #include "patches.h"
+#include "context_hook.h"
 
 static DWORD WINAPI PatchThread(LPVOID lpParam) {
     (void)lpParam;
@@ -28,6 +29,10 @@ static DWORD WINAPI PatchThread(LPVOID lpParam) {
     } else {
         log_error("Could not apply all patches after %d attempts. Check game version/signatures.", max_retries);
     }
+
+    // Initialize context state hooks and Steam Input API integration
+    log_info("Initializing Decima Action Context logger hook and Steam Input...");
+    init_context_hook();
 
     return 0;
 }

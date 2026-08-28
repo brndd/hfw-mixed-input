@@ -12,7 +12,7 @@
 	}
 	"actions"
 	{
-		"MainControls"
+		"InGameControls"
 		{
 			"title"		"#Set_InGameControls"
 			"legacy_set"		"0"
@@ -177,11 +177,11 @@
 	}
 	"action_layers"
 	{
-		"WeaponWheel"
+		"WeaponWheelControls"
 		{
 			"title"		"#WeaponWheelSet"
 			"legacy_set"		"0"
-			"parent_set_name"		"MainControls"
+			"parent_set_name"		"InGameControls"
 		}
 	}
 	"localization"
