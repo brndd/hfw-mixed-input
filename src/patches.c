@@ -118,7 +118,7 @@ static const patch_def_t G_PATCHES[] = {
 static bool write_memory_safe(void* target, const void* data, size_t size) {
     DWORD old_protect;
     if (!VirtualProtect(target, size, PAGE_EXECUTE_READWRITE, &old_protect)) {
-        log_error("VirtualProtect (PAGE_EXECUTE_READWRITE) failed at %p (Error: %lu)", target, GetLastError());
+        log_error("VirtualProtect failed at %p (Error: %lu)", target, GetLastError());
         return false;
     }
 
@@ -140,11 +140,8 @@ bool apply_all_patches(void) {
     uint8_t* text_base = NULL;
     size_t text_size = 0;
     if (!get_module_section(main_module, ".text", &text_base, &text_size)) {
-        log_warn("Failed to find .text section; falling back to full module scan.");
         get_module_section(main_module, NULL, &text_base, &text_size);
     }
-
-    log_info("Scanning module for AOB signatures (Base: %p, Size: 0x%zX)...", text_base, text_size);
 
     size_t patch_count = sizeof(G_PATCHES) / sizeof(G_PATCHES[0]);
     size_t success_count = 0;
@@ -153,23 +150,23 @@ bool apply_all_patches(void) {
         const patch_def_t* p = &G_PATCHES[i];
         uint8_t* match = scan_pattern(text_base, text_size, p->pattern);
         if (!match) {
-            log_error("Patch [%zu/%zu] FAILED to find signature: %s", i + 1, patch_count, p->name);
+            log_error("Patch [%zu/%zu] FAILED to find signature: '%s'", i + 1, patch_count, p->name);
             continue;
         }
 
         uint8_t* patch_address = match + p->patch_offset;
-        uintptr_t rva = (uintptr_t)patch_address - (uintptr_t)main_module;
-        log_info("Patch [%zu/%zu] Found '%s' at RVA +0x%lX (Addr: %p)", 
-                 i + 1, patch_count, p->name, (unsigned long)rva, patch_address);
-
         if (write_memory_safe(patch_address, p->patch_bytes, p->patch_size)) {
-            log_info("Patch [%zu/%zu] Successfully applied '%s'", i + 1, patch_count, p->name);
             success_count++;
         } else {
             log_error("Patch [%zu/%zu] FAILED writing memory for '%s'", i + 1, patch_count, p->name);
         }
     }
 
-    log_info("=== Patching Completed: %zu / %zu patches applied successfully ===", success_count, patch_count);
-    return (success_count == patch_count);
+    if (success_count == patch_count) {
+        log_info("Successfully applied all %zu patches.", patch_count);
+        return true;
+    } else {
+        log_error("Patching incomplete: only %zu / %zu patches succeeded.", success_count, patch_count);
+        return false;
+    }
 }

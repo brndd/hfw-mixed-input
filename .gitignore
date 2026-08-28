@@ -1,0 +1,10 @@
+# Binaries and build artifacts
+*.o
+*.dll
+*.log
+
+# Editor and temporary files
+.vscode/
+.idea/
+*.swp
+*.bak

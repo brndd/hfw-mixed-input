@@ -13,15 +13,15 @@ void log_init(void) {
     char* last_slash = strrchr(log_path, '\\');
     if (last_slash) {
         *(last_slash + 1) = '\0';
-        strcat(log_path, "hfw_mixed_input.log");
+        strcat(log_path, "mixed_input_fix.log");
     } else {
-        strcpy(log_path, "hfw_mixed_input.log");
+        strcpy(log_path, "mixed_input_fix.log");
     }
 
     g_log_file = fopen(log_path, "w");
     g_log_initialized = true;
     
-    log_info("=== Horizon Forbidden West: Mixed Input Mod Initialized ===");
+    log_info("=== Mixed Input Fix Initialized ===");
 }
 
 static void log_write(const char* level, const char* fmt, va_list args) {
@@ -70,7 +70,7 @@ void log_close(void) {
     if (!g_log_initialized) return;
     EnterCriticalSection(&g_log_lock);
     if (g_log_file) {
-        log_info("=== Shutting Down Mixed Input Mod ===");
+        log_info("=== Shutting Down Mixed Input Fix ===");
         fclose(g_log_file);
         g_log_file = NULL;
     }

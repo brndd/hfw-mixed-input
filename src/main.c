@@ -4,35 +4,19 @@
 #include "patches.h"
 #include "context_hook.h"
 
-static DWORD WINAPI PatchThread(LPVOID lpParam) {
+static DWORD WINAPI InitThread(LPVOID lpParam) {
     (void)lpParam;
     
-    // Allow the main executable to finish early CRT/PE loader initialization
-    Sleep(500);
+    // Brief pause for early CRT / module load stabilization
+    Sleep(200);
 
-    log_info("Starting background patcher thread...");
-    
-    // Attempt pattern scan and patch
-    int max_retries = 10;
-    bool success = false;
-    for (int attempt = 1; attempt <= max_retries; ++attempt) {
-        log_info("Patch attempt %d of %d...", attempt, max_retries);
-        if (apply_all_patches()) {
-            success = true;
-            break;
-        }
-        Sleep(500);
+    if (!apply_all_patches()) {
+        log_error("Patcher failed to apply all signatures; check game version.");
     }
 
-    if (success) {
-        log_info("All patches successfully active! Mixed input is ready.");
-    } else {
-        log_error("Could not apply all patches after %d attempts. Check game version/signatures.", max_retries);
+    if (!init_context_hook()) {
+        log_error("Failed to initialize Decima context hook.");
     }
-
-    // Initialize context state hooks and Steam Input API integration
-    log_info("Initializing Decima Action Context logger hook and Steam Input...");
-    init_context_hook();
 
     return 0;
 }
@@ -45,17 +29,16 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hinstDLL);
         log_init();
-        log_info("DLL_PROCESS_ATTACH: Loading proxy bindings...");
         if (!proxy_init()) {
             log_error("Failed to initialize version.dll proxy!");
             return FALSE;
         }
         
-        HANDLE thread = CreateThread(NULL, 0, PatchThread, NULL, 0, NULL);
+        HANDLE thread = CreateThread(NULL, 0, InitThread, NULL, 0, NULL);
         if (thread) {
             CloseHandle(thread);
         } else {
-            log_error("Failed to create background patch thread!");
+            log_error("Failed to create background initialization thread!");
         }
         break;
 
