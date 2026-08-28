@@ -14,7 +14,7 @@
 	{
 		"MainControls"
 		{
-			"title"		"#InGameControls"
+			"title"		"#Set_InGameControls"
 			"legacy_set"		"0"
 			"StickPadGyro"
 			{
@@ -188,7 +188,7 @@
 	{
 		"english"
 		{
-			"InGameControls"		"Controls"
+			"Set_InGameControls"		"Controls"
 			"Forward_Input_Action"		"Move forward"
 			"Backward_Inout_Action"		"Move backward"
 			"Left_Input_Action"		"Move left"
