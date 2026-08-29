@@ -33,11 +33,6 @@
 					"title"		"#Move"
 					"input_mode"		"joystick_move"
 				}
-				"SteamTouchPad"
-				{
-					"title"		"#SteamTouchPad"
-					"input_mode"		"absolute_mouse"
-				}
 			}
 			"Button"
 			{
@@ -167,11 +162,6 @@
 				{
 					"title"		"#Move"
 					"input_mode"		"joystick_move"
-				}
-				"SteamTouchPad"
-				{
-					"title"		"#SteamTouchPad"
-					"input_mode"		"absolute_mouse"
 				}
 			}
 		}
