@@ -145,6 +145,7 @@
 				"f5940f10-f2b4-42ee-8482-79cabc1ea3f8"		"#Navigate_Previous_Cycle"                                                          
 				"ShowHUD_Remappable_Input_Action"		"#Navigate_HUD"
 				"6a8099b1-fb02-11e9-9ad2-6c2b59c965b6"		"#Sprint_Remappable_Input_Action"
+				"6a80729f-fb02-11e9-9707-6c2b59c965b6"		"#Focus_Remappable_Input_Action"
 			}
 			"StickPadGyro"
 			{

@@ -900,6 +900,7 @@
 						"bindings"
 						{
 							"binding"		"game_action MenuControls ShowHUD_Remappable_Input_Action, Show HUD, , "
+							"binding"		"game_action MenuControls 6a80729f-fb02-11e9-9707-6c2b59c965b6, Focus Activate, , "
 						}
 					}
 				}
