@@ -15,7 +15,7 @@ If you're on Linux, set the game's launch options to `WINEDLLOVERRIDES="version=
 
 ## Game version support
 
-This worked when I built it, with whatever game version was the newest at that time. If it doesn't work anymore make an issue and I might fix see if it can be fixed. The patches aren't super robust against binary changes from updates so this is liable to break.
+This worked when I built it, with whatever game version was the newest at that time. If it doesn't work anymore make an issue and I might see if it can be fixed. The patches aren't super robust against binary changes from updates so this is liable to break.
 
 This is completely built around Steam Input. No it will not work with the EGS version, no it will not work with your pirated copy unless Steam emulators have massively stepped up their Steam Input emulation game since I last looked. Yes a version could theoretically be made that works with those, no I will not make it.
 
