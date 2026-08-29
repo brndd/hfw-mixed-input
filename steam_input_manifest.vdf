@@ -1787,6 +1787,8 @@
 			"Navigate_Up"		"Yukarı Git"
 			"Navigate_Intel"		"Menüyü Aç"
 			"Navigate_HUD"		"Özel Göstergeleri Görüntüle"
+			"MenuSet"		"Seçenekler Menüsü"
+			"SteamTouchPad"		"Dokunmatik Yüzeyle Bakın"
 		}
 		"arabic"
 		{
@@ -2037,6 +2039,8 @@
 			"Navigate_Up"		"เลื่อนไปข้างบน"
 			"Navigate_Intel"		"เปิดเมนู"
 			"Navigate_HUD"		"แสดง HUD"
+			"MenuSet"		"เมนูตัวเลือก"
+			"SteamTouchPad"		"มองด้วยทัชแพด"
 		}
 		"hungarian"
 		{
@@ -2119,6 +2123,8 @@
 			"Navigate_Up"		"Navigáció felfelé"
 			"Navigate_Intel"		"Menü megnyitása"
 			"Navigate_HUD"		"HUD megjelenítése"
+			"MenuSet"		"Beállítások menü"
+			"SteamTouchPad"		"Nézés érintőpaddal"
 		}
 		"czech"
 		{
@@ -2201,6 +2207,8 @@
 			"Navigate_Up"		"Přejít nahoru"
 			"Navigate_Intel"		"Otevřít nabídku"
 			"Navigate_HUD"		"Zobrazit HUD"
+			"MenuSet"		"Nabídka možností"
+			"SteamTouchPad"		"Rozhlížení dotykovou ploškou"
 		}
 		"greek"
 		{
@@ -2283,6 +2291,8 @@
 			"Navigate_Up"		"Μετάβαση Πάνω"
 			"Navigate_Intel"		"Άνοιγμα Μενού"
 			"Navigate_HUD"		"Εμφάνιση HUD"
+			"MenuSet"		"Μενού Επιλογών"
+			"SteamTouchPad"		"Κάμερα με Επιφάνεια Αφής"
 		}
 	}
 }
