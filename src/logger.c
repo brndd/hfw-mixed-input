@@ -7,6 +7,18 @@
 static FILE* g_log_file = NULL;
 static CRITICAL_SECTION g_log_lock;
 static bool g_log_initialized = false;
+static bool g_debug_enabled = false;
+static bool g_debug_checked = false;
+
+bool log_is_debug_enabled(void) {
+    if (!g_debug_checked) {
+        char val[8] = {0};
+        DWORD len = GetEnvironmentVariableA("INPUTFIX_DEBUG", val, sizeof(val));
+        g_debug_enabled = (len > 0 && len < sizeof(val) && val[0] != '0');
+        g_debug_checked = true;
+    }
+    return g_debug_enabled;
+}
 
 void log_init(void) {
     if (g_log_initialized) return;
@@ -47,6 +59,14 @@ static void log_write(const char* level, const char* fmt, va_list args) {
     }
     
     LeaveCriticalSection(&g_log_lock);
+}
+
+void log_debug(const char* fmt, ...) {
+    if (!log_is_debug_enabled()) return;
+    va_list args;
+    va_start(args, fmt);
+    log_write("DEBUG", fmt, args);
+    va_end(args);
 }
 
 void log_info(const char* fmt, ...) {

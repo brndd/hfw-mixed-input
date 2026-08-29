@@ -32,6 +32,7 @@ static const char* safe_get_context_name(void* context_desc) {
 static void Hook_EnableContext(void* this_ptr, void* context_desc) {
     const char* name = safe_get_context_name(context_desc);
     if (name) {
+        log_debug(">>> [CONTEXT ENABLED] : %s", name);
         steam_input_on_context_change(name, true);
     }
 
@@ -43,6 +44,7 @@ static void Hook_EnableContext(void* this_ptr, void* context_desc) {
 static void Hook_DisableContext(void* this_ptr, void* context_desc) {
     const char* name = safe_get_context_name(context_desc);
     if (name) {
+        log_debug("<<< [CONTEXT DISABLED]: %s", name);
         steam_input_on_context_change(name, false);
     }
 
