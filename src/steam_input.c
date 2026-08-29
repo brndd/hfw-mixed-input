@@ -24,7 +24,14 @@ static SteamAPI_ISteamInput_DeactivateActionSetLayer_fn fn_DeactivateActionSetLa
 
 static void* g_pSteamInput = NULL;
 static bool g_siapi_ready = false;
-static bool g_in_menu_context = true;
+
+enum {
+    CTX_MENU = 1 << 0,
+    CTX_LETTERBOX = 1 << 1,
+    CTX_CINEMATIC = 1 << 2,
+    CTX_DIALOG = 1 << 3,
+};
+static uint32_t g_menu_context_mask = CTX_MENU;
 
 static InputActionSetHandle_t g_hInGame = 0;
 static InputActionSetHandle_t g_hMenu = 0;
@@ -84,23 +91,42 @@ void steam_input_on_context_change(const char* context_name, bool enabled) {
             for (int i = 0; i < count; ++i) {
                 if (enabled) {
                     fn_ActivateActionSetLayer(g_pSteamInput, controllers[i], g_hWeaponWheel);
+                    log_debug("[SIAPI] Controller %d: Activated WeaponWheelControls layer (0x%llX)", i, (unsigned long long)g_hWeaponWheel);
                 } else {
                     fn_DeactivateActionSetLayer(g_pSteamInput, controllers[i], g_hWeaponWheel);
+                    log_debug("[SIAPI] Controller %d: Deactivated WeaponWheelControls layer (0x%llX)", i, (unsigned long long)g_hWeaponWheel);
                 }
             }
         }
         return;
     }
 
-    // 2. Menu: Full Action Set Switch (MenuControls <-> InGameControls)
-    if (strcmp(context_name, "Menu") == 0) {
-        g_in_menu_context = enabled;
-        if (count > 0) {
+    // 2. Menu/Cinematic/Dialogue: Full Action Set Switch (MenuControls <-> InGameControls)
+    uint32_t flag = 0;
+    if (strcmp(context_name, "Menu") == 0) flag = CTX_MENU;
+    else if (strcmp(context_name, "LetterboxedCinematic") == 0) flag = CTX_LETTERBOX;
+    else if (strcmp(context_name, "Cinematic") == 0) flag = CTX_CINEMATIC;
+    else if (strcmp(context_name, "DialogChoice") == 0) flag = CTX_DIALOG;
+
+    if (flag) {
+        bool was_in_menu = (g_menu_context_mask != 0);
+        if (enabled) {
+            g_menu_context_mask |= flag;
+        } else {
+            g_menu_context_mask &= ~flag;
+        }
+        bool is_in_menu = (g_menu_context_mask != 0);
+
+        if (was_in_menu != is_in_menu && count > 0) {
             for (int i = 0; i < count; ++i) {
-                if (enabled && g_hMenu) {
+                if (is_in_menu && g_hMenu) {
                     fn_ActivateActionSet(g_pSteamInput, controllers[i], g_hMenu);
-                } else if (!enabled && g_hInGame) {
+                    log_debug("[SIAPI] Controller %d: Switched to MenuControls (0x%llX) [trigger: %s, mask: 0x%X]", 
+                              i, (unsigned long long)g_hMenu, context_name, g_menu_context_mask);
+                } else if (!is_in_menu && g_hInGame) {
                     fn_ActivateActionSet(g_pSteamInput, controllers[i], g_hInGame);
+                    log_debug("[SIAPI] Controller %d: Restored InGameControls (0x%llX) [trigger: %s]", 
+                              i, (unsigned long long)g_hInGame, context_name);
                 }
             }
         }
@@ -109,9 +135,11 @@ void steam_input_on_context_change(const char* context_name, bool enabled) {
 
     // 3. GamepadActive: Decima just initialized/unlocked the Gamepad subsystem
     if (strcmp(context_name, "GamepadActive") == 0 && enabled) {
-        if (g_in_menu_context && g_hMenu && count > 0) {
+        if (g_menu_context_mask != 0 && g_hMenu && count > 0) {
             for (int i = 0; i < count; ++i) {
                 fn_ActivateActionSet(g_pSteamInput, controllers[i], g_hMenu);
+                log_debug("[SIAPI] Controller %d: Re-applied MenuControls on GamepadActive (0x%llX)", 
+                          i, (unsigned long long)g_hMenu);
             }
         }
         return;
