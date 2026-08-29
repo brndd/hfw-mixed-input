@@ -31,6 +31,11 @@ The controller profile needs to have the following actionset IDs:
 
 The mod is hardcoded for these IDs and has hooks in the game's context manager to change the controller actionset.
 
+## Known Issues
+
+- Photo mode is broken a little. Mouse input does not work in it (normally you hold down right click and move the mouse to pan the camera) so the only way to pan the camera is with the right joystick.
+- Rarely the game loses track of the mouse and the camera starts spazzing out. To fix this, pause the game, unfocus the window (alt-tab) and then click back into it.
+
 ## Building from Source
 
 Requires `mingw-w64`:
