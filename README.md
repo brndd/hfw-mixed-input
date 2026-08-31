@@ -35,7 +35,7 @@ This is completely built around Steam Input. No it will not work with the EGS ve
 
 ## Controller support
 
-Profiles for all major controllers (Steam Controller, PS4, PS5, Steam Deck, Switch Pro, Xbox 360, Xbox One) are now bundled. However, only the Steam Controller and PS4 profiles have been tested; the rest are experimental. Pull requests and device donations welcome.
+Profiles for all major controllers are bundled. However, only the Steam Controller and PS4 profiles have been tested; the rest are experimental. Pull requests and device donations welcome.
 
 To add your own profile locally, you can edit `steam_input_manifest.vdf` and configure a new `steam_input_<controller>.vdf` near the top, then put your actual controller config in that file. Look at the existing ones in `vdf/` for examples. You can also use Steam's controller configuration GUI to create these, but the controls may not appear right there if the manifest doesn't already provide a config for your controller.
 
