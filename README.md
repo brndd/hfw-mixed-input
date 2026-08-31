@@ -6,6 +6,8 @@ Intended primarily for use with the Steam Controller and other such touchpad con
 
 ## Installation
 
+Download the mod from the Releases page [or click here to download the latest release](https://github.com/brndd/hfw-mixed-input/releases/latest/download/hfw-mixed-input-v0.8.zip).
+
 Copy the contents of the .zip into your game directory (where `HorizonForbiddenWest.exe` is located).
 
 Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm the patch works (or just, you know, try it).
