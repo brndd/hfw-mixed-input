@@ -14,7 +14,7 @@ Launch the game through Steam. Check `mixed_input_fix.log` in the game directory
 
 If you're on Linux, set the game's launch options to `WINEDLLOVERRIDES="version=n,b" %command%` or else the DLL won't load. Yes you can run Gamescope and whatever other bells and whistles with this, just stick the WINEDLLOVERRIDES part at the very beginning of the command.
 
-## Configuration & Input Modes
+## Configuration
 
 The mod's behavior can be configured via `mixed_input_fix.ini`:
 
@@ -47,7 +47,7 @@ The controller profile needs to have the following ActionSet IDs:
 
 The mod is hardcoded for these IDs and has hooks in the game's context manager to change the controller actionset.
 
-## Building from Source
+## Building from source
 
 Requires CMake 3.25+ and `mingw-w64` C++ toolchain:
 
