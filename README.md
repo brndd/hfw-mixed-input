@@ -10,7 +10,9 @@ Copy the following files into your game directory (where `HorizonForbiddenWest.e
 - `steam_input_manifest.vdf`
 - `steam_input_steamcontroller.vdf`
 
-Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm initialization (or just, you know, try it). Set in-game mouse sensitivity to 1.0 on all axis for best results with the built-in profile.
+Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm the patch works (or just, you know, try it).
+
+**Set in-game mouse sensitivity to 1.0 on both axis for best results with the built-in profile.**
 
 If you're on Linux, set the game's launch options to `WINEDLLOVERRIDES="version=n,b" %command%` or else the DLL won't load. Yes you can run Gamescope and whatever other bells and whistles with this, just stick the WINEDLLOVERRIDES part at the very beginning of the command.
 
@@ -23,12 +25,13 @@ The mod's behavior can be configured via `mixed_input_fix.ini`:
 mode = siapi
 ```
 
-- **`siapi`** *(Default & Recommended)*: Direct Steam Input API integration using native memory and camera hooks. Ingests trackpad deltas directly into camera components, handles automatic action set switching (InGame, Weapon Wheel layer, Menu), and supports full Photo Mode FreeCamera panning with both the trackpad and physical mouse (RMB held).
-- **`raw_mouse`** *(Legacy)*: Unblocks Decima's internal input samplers in `NxInputImpl` via 12 binary memory patches. Default to `siapi`, but switch to `raw_mouse` if `siapi` breaks on a newer game patch or if you really need regular physical mouse input simultaneously with gamepad locomotion for your specific usecase. In `raw_mouse` mode, Photo Mode stays on `MenuControls`.
+- **`siapi`** *(Recommended)*: Direct Steam Input API integration using a custom SteamTouchPad control, similar to Horizon Zero Dawn Remastered. This has the advantage of stopping the cursor from wandering off-screen during cutscenes and dialogue that don't lock it, plus it has proper support for Photo Mode.
+- **`raw_mouse`** *(Legacy)*: Unblocks simultaneous raw mouse & controller input. This is useful if you for some reason want to use your actual mouse together with a controller, or if you want to keep the Steam Controller touchpad in raw mouse mode, or if the SIAPI patch just doesn't work for some reason. The downside is poor Photo Mode support and a few more edge cases.
+  - **Note:** if using raw_mouse with a Steam Controller, the provided controller profile won't work for you and you must change the controller settings to put the touchpad and gyro in mouse mode yourself.
 
 ## Game version support
 
-This worked when I built it, with whatever game version was the newest at that time. If it doesn't work anymore make an issue and I might see if it can be fixed. The patches aren't super robust against binary changes from updates so this is liable to break.
+This was built against the 2024-06-27 Steam build of the game. The patches aren't super robust against binary changes from updates so this is liable to break. If it doesn't work anymore make an issue and I might see if it can be fixed.
 
 This is completely built around Steam Input. No it will not work with the EGS version, no it will not work with your pirated copy unless Steam emulators have massively stepped up their Steam Input emulation game since I last looked. Yes a version could theoretically be made that works with those, no I will not make it.
 
