@@ -875,7 +875,7 @@
 		"settings"
 		{
 			"layer"		"1"
-			"gyro_natural_sensitivity"		"1"
+			"gyro_natural_sensitivity"		"0"
 		}
 		"gameactions"
 		{
