@@ -35,7 +35,9 @@ This is completely built around Steam Input. No it will not work with the EGS ve
 
 ## Controller support
 
-Currently a Steam Input controller profile is provided only for the first gen Steam Controller, because I don't own a Steam Deck or Steam Controller (2026). Pull requests and device donations welcome.
+Currently profiles are bundled only for the v1 Steam Controller (Gordon) and the PS4 controller, as I don't own a Steam Deck or a 2026 Steam Controller. Pull requests and device donations welcome.
+
+To add your own profile locally, you can edit `steam_input_manifest.vdf` and configure a new `steam_input_<controller>.vdf` near the top, then put your actual controller config in that file. Look at the existing ones for examples. You can also use Steam's controller configuration GUI to create these, but the controls may not appear right there if the manifest doesn't already provide a config for your controller.
 
 The controller profile needs to have the following ActionSet IDs:
 
