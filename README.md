@@ -12,7 +12,7 @@ Copy the following files into your game directory (where `HorizonForbiddenWest.e
 
 Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm the patch works (or just, you know, try it).
 
-**Set in-game mouse sensitivity to 1.0 on both axis for best results with the built-in profile.**
+**Set in-game mouse sensitivity to 1.0 on both axis for best results with the built-in profile.** Due to the way we override the default profile/controller manifest, the modified default profile with the custom ActionSets might only be visible while the game is running.
 
 If you're on Linux, set the game's launch options to `WINEDLLOVERRIDES="version=n,b" %command%` or else the DLL won't load. Yes you can run Gamescope and whatever other bells and whistles with this, just stick the WINEDLLOVERRIDES part at the very beginning of the command.
 
@@ -39,11 +39,11 @@ This is completely built around Steam Input. No it will not work with the EGS ve
 
 Currently a Steam Input controller profile is provided only for the first gen Steam Controller, because I don't own a Steam Deck or Steam Controller (2026). Pull requests and device donations welcome.
 
-The controller profile needs to have the following actionset IDs:
+The controller profile needs to have the following ActionSet IDs:
 
-- `InGameControls` **actionset** for normal gameplay controls
-- `WeaponWheelControls` actionset **layer** as a child of `InGameControls` to turn right trackpad into analog stick for the weapon wheel
-- `MenuControls` **actionset** to turn right trackpad into analog stick for menus.
+- `InGameControls` **ActionSet** for normal gameplay controls
+- `WeaponWheelControls` ActionSet **layer** as a child of `InGameControls` to turn right trackpad into analog stick for the weapon wheel
+- `MenuControls` **ActionSet** to turn right trackpad into analog stick for menus.
 
 The mod is hardcoded for these IDs and has hooks in the game's context manager to change the controller actionset.
 
