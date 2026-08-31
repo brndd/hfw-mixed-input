@@ -6,7 +6,7 @@ Intended primarily for use with the Steam Controller and other such touchpad con
 
 ## Installation
 
-[Click here to download the latest release](https://github.com/brndd/hfw-mixed-input/releases/latest/download/hfw-mixed-input.zip).
+[Click here to download the latest release.](https://github.com/brndd/hfw-mixed-input/releases/latest/download/hfw-mixed-input.zip)
 
 Copy the contents of the .zip into your game directory (where `HorizonForbiddenWest.exe` is located).
 
