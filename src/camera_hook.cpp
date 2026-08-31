@@ -144,13 +144,15 @@ bool init() {
         return false;
     }
 
-    // 2. Force native mouse camera look branch in CalculateLookRotation (0x1193CE7)
+    // 2. Combine Gamepad and Mouse look in CalculateLookRotation (0x1193CE7)
     const char* sig_mouse_branch = "80 BD ?? ?? 00 00 00 48 8D 44 24 ?? C5 F8 57 C0 74 ?? C4 E3 79 21 44 24";
     uint8_t* patch_site_branch = scanner::scan(*text_region, sig_mouse_branch);
     if (patch_site_branch) {
-        uint8_t* je_branch = patch_site_branch + 16;
-        if (patches::write_nop(je_branch, 2)) {
-            logger::debug("Forced native mouse look branch in CalculateLookRotation (0x74 0x16 -> NOP)");
+        uint8_t* patch_addr = patch_site_branch + 16;
+        if (patches::write_bytes(patch_addr, patches::LOOK_ROTATION_COMBINE_PATCH)) {
+            logger::debug("Patched CalculateLookRotation to combine Gamepad and Mouse look deltas");
+        } else {
+            logger::error("Failed to write combine patch to CalculateLookRotation");
         }
     } else {
         logger::warn("Failed to find CalculateLookRotation mouse look branch signature!");

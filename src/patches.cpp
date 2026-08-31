@@ -35,12 +35,12 @@ static constexpr uint8_t NOP5[] = { 0x90, 0x90, 0x90, 0x90, 0x90 };
 static constexpr uint8_t NOP6[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
 
 static const std::array<PatchDef, 12> G_PATCHES = {{
-    // 1. Force native mouse camera look branch in FUN_141193830
+    // 1. Combine Gamepad Stick Look and Mouse Look in FUN_141193830
     {
-        .name = "Camera Look Native Mouse Branch",
+        .name = "Camera Look Combine Gamepad + Mouse",
         .pattern = "80 BD ?? ?? 00 00 00 48 8D 44 24 ?? C5 F8 57 C0 74 ?? C4 E3 79 21 44 24",
         .patch_offset = 16,
-        .patch_bytes = NOP2
+        .patch_bytes = LOOK_ROTATION_COMBINE_PATCH
     },
     // 2. Prevent mouse movement from switching active device in FUN_14008a950
     {

@@ -26,9 +26,9 @@ Decima implements dual-device mutual exclusion across three separate tiers:
 - **`ThirdPersonPlayerCameraComponent::SampleInput` (RVA `0x118EEA0`)**:
   - Stores Gamepad stick look delta at `component + 0x130` and Mouse look delta at `component + 0x140`.
 - **`ThirdPersonPlayerCameraComponent::CalculateLookRotation` (RVA `0x1193830`)**:
-  - At `0x1193CE7`, a conditional branch (`je 0x1193CFF`) selects Gamepad look branch if `"GamepadActive"` is enabled, discarding the mouse look delta.
-  - **Key Lesson**: Do not inject custom vector math into component stack frames (causes register clobbering / uninitialized stack reads and infinite camera spinning).
-  - **Resolution**: NOP the 2-byte branch (`74 16` -> `90 90` at `+0x1193CE7`) so the camera component always executes the engine's native, compiled Mouse Look calculation while the rest of the game stays in Gamepad mode.
+  - At `0x1193CE7`, a conditional branch (`je 0x1193CFF`) selects Gamepad look branch if `"GamepadActive"` is enabled, discarding the mouse look delta, while the fallback branch selects Mouse look, discarding Gamepad stick look.
+  - **Previous Flawed Approach**: NOPing the 2-byte branch (`74 16` -> `90 90` at `+0x1193CE7`) forced the engine to unconditionally take the Mouse look branch, which caused regular joystick (right stick) look input to be completely dropped during normal gameplay.
+  - **Resolution**: Patch the 42-byte block at `+0x1193CE7` with vector addition instructions that sum Gamepad look (`XMM6`/`XMM7`) and Mouse look (`[RSP+0x30]`/`XMM15`) together (`vaddss xmm6, xmm6, [rsp+0x30]` and `vaddss xmm7, xmm7, xmm15`). This ensures joystick look and mouse/trackpad look both function independently and simultaneously without mutual exclusion.
 
 ### Tier 4: Photo Mode & FreeCamera Architecture (`PhotoModeMenuController`)
 - **`PhotoModeMenuController::UpdateFreeCamera` (RVA `0x13DC2C0`)**:
@@ -62,7 +62,7 @@ Decima implements dual-device mutual exclusion across three separate tiers:
 - **SIAPI Trackpad FreeCamera Panning**: Active with or without RMB held; scaled by `(FOV_scale * 40.0f)` when RMB is not held and handled by native sensitivity when RMB is held.
 - **Physical Mouse Cursor & Pan**: Decima natively handles UI cursor navigation when RMB is released and FreeCamera panning when RMB is held (reading directly from Decima's `NxInputImpl` raw mouse buffer).
 - **Simultaneous Gamepad Support**: Gamepad sticks, buttons, and locomotion function seamlessly alongside trackpad look and mouse input.
-- **Minimal Footprint**: Built with modern C++23 and CMake using SafetyHook (Zydis AVX2-aware disassembler). Operates with 3 clean inline hooks (`SampleInputLookState`, `CalculateFreeCameraLookRotation`, `ProcessRawMouseInput`), 2 context hooks (`EnableContext`, `DisableContext`), and 1 NOP branch in `CalculateLookRotation`. No naked assembly thunks, no manual register preservation, and no OS cursor hacks.
+- **Minimal Footprint**: Built with modern C++23 and CMake using SafetyHook (Zydis AVX2-aware disassembler). Operates with 3 clean inline hooks (`SampleInputLookState`, `CalculateFreeCameraLookRotation`, `ProcessRawMouseInput`), 2 context hooks (`EnableContext`, `DisableContext`), and 1 inline vector addition patch in `CalculateLookRotation`. No naked assembly thunks, no manual register preservation, and no OS cursor hacks.
 
 
 
