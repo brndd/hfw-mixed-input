@@ -9,6 +9,13 @@
 				"path" "steam_input_steamcontroller.vdf"
 			}
 		}
+		"controller_ps4"
+		{
+			"0"
+			{
+				"path" "steam_input_ps4.vdf"
+			}
+		}
 	}
 	"actions"
 	{
