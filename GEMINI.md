@@ -13,6 +13,9 @@ Decima implements dual-device mutual exclusion across three separate tiers:
   - Unblocked by NOPing the comparison branches at `+0x8BF56`, `+0x8BFC1`, `+0x8C022`, `+0x8C09A`, `+0x8C0CD`.
 - **`NxInputImpl::ProcessRawMouseInput` (RVA `0x8AF20`)**:
   - Ingests Windows `WM_INPUT` mouse deltas into `NxInputImpl + 0x4fc` (X) and `+ 0x500` (Y).
+  - Evaluates `EnableMouseSmoothing` at `NxInputImpl + 0x569` (hardcoded `1` / `true` default in ctor `0x863F0` and `0x8B380`).
+  - When `+0x569 == 1`, routes mouse input through a 33.3ms rolling interpolator (`0xD3E90` / `0xD3DA0`), causing velocity capping and negative mouse acceleration during fast flicks.
+  - When `+0x569 == 0` (or `JZ` at `0x8B223` / `0x8B301` patched to `JMP`), deltas are summed directly into `+0x4fc` and `+0x500` with 1:1 linear raw mouse response.
   - Flushed to `0.0f` at the end of each frame in `NxInputImpl::Tick` (`0x8B910`).
 
 ### Tier 2: Action Context & Device Switching

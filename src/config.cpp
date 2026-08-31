@@ -41,6 +41,12 @@ void load() {
             } else {
                 g_config.mode = InputMode::Siapi;
             }
+        } else if (key == "disable_mouse_smoothing" || key == "disable_negative_acceleration" || key == "disable_negative_accel") {
+            if (val == "true" || val == "1" || val == "yes" || val == "on") {
+                g_config.disable_mouse_smoothing = true;
+            } else {
+                g_config.disable_mouse_smoothing = false;
+            }
         } else if (key == "log_level") {
             if (val == "debug") g_config.log_level = 0;
             else if (val == "info") g_config.log_level = 1;

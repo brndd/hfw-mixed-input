@@ -49,5 +49,6 @@ inline constexpr uint8_t LOOK_ROTATION_COMBINE_PATCH[] = {
 bool write_nop(uint8_t* target, size_t size);
 bool write_bytes(uint8_t* target, std::span<const uint8_t> data);
 bool apply_all_patches();
+bool apply_mouse_smoothing_patch();
 
 } // namespace mod::patches

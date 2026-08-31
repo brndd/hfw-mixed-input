@@ -1,6 +1,7 @@
 #include "camera_hook.hpp"
 #include "scanner.hpp"
 #include "logger.hpp"
+#include "config.hpp"
 #include "steam_input.hpp"
 #include "patches.hpp"
 #include <safetyhook.hpp>
@@ -20,6 +21,9 @@ static safetyhook::InlineHook g_hook_freecam;
 // ---------------------------------------------------------------------------
 static void hook_process_raw_mouse(void* this_ptr, void* raw_input_data) {
     g_pNxInputImpl = this_ptr;
+    if (config::g_config.disable_mouse_smoothing) {
+        *reinterpret_cast<uint8_t*>(reinterpret_cast<char*>(this_ptr) + 0x569) = 0;
+    }
     g_hook_raw_mouse.call<void>(this_ptr, raw_input_data);
 }
 
