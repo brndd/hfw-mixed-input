@@ -802,6 +802,352 @@
 			}
 		}
 	}
+	"group"
+	{
+		"id"		"50"
+		"mode"		"four_buttons"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"button_a"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls Confirm, Confirm, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"button_b"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls 54eda558-0cf3-4e92-9495-bdfef83637be, Cancel, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"button_x"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls 413b34bc-d4c0-4810-abcc-08797c8a397e, Apply, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"button_y"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls 3be6a264-9f1a-464b-ac0e-4cce0492556b, Reset, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"51"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"click"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls aa162431-19fe-4d6d-ae9c-2f8d80398c6a, Previous Tab, , "
+						}
+						"settings"
+						{
+							"haptic_intensity"		"2"
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"52"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"click"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls 8f422a09-6d22-4bff-9df9-d8ab8b833838, Next Tab, , "
+						}
+						"settings"
+						{
+							"haptic_intensity"		"2"
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"54"
+		"mode"		"four_buttons"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"layer"		"1"
+		}
+	}
+	"group"
+	{
+		"id"		"55"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"layer"		"1"
+		}
+	}
+	"group"
+	{
+		"id"		"56"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"layer"		"1"
+		}
+	}
+	"group"
+	{
+		"id"		"62"
+		"mode"		"absolute_mouse"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"layer"		"1"
+			"gyro_natural_sensitivity"		"0"
+		}
+		"gameactions"
+		{
+			"InGameControls"		"SteamTouchPad"
+		}
+	}
+	"group"
+	{
+		"id"		"66"
+		"mode"		"dpad"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"dpad_north"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls dd33cf54-d46f-4574-b537-84297885ce02, Navigate Up, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"dpad_south"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls c4441e7b-920c-4a22-acb6-ed19892fea3f, Navigate Down, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"dpad_east"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls 2d7828ad-37a0-49f5-8a27-657e69acc89d, Navigate Right, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"dpad_west"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls 1b3f62d1-458f-4e6d-b9c5-15c0d4a615bf, Navigate Left, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+		"settings"
+		{
+			"requires_click"		"0"
+			"haptic_intensity_override"		"0"
+		}
+	}
+	"group"
+	{
+		"id"		"49"
+		"mode"		"switches"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"button_escape"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls PauseMenu_Remappable_Input_Action, Pause, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"left_bumper"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls f5940f10-f2b4-42ee-8482-79cabc1ea3f8, Navigate Previous Item, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"right_bumper"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action MenuControls ba3b92ed-6f88-4cee-a9b5-98fe9c5b6879, Navigate Next Item, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"53"
+		"mode"		"switches"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"layer"		"1"
+		}
+	}
 	"preset"
 	{
 		"id"		"0"
@@ -817,6 +1163,32 @@
 			"33"		"center_trackpad active"
 			"32"		"dpad active"
 			"48"		"gyro active"
+		}
+	}
+	"preset"
+	{
+		"id"		"1"
+		"name"		"MenuControls"
+		"group_source_bindings"
+		{
+			"49"		"switch active"
+			"50"		"button_diamond active"
+			"51"		"left_trigger active"
+			"52"		"right_trigger active"
+			"66"		"dpad active"
+		}
+	}
+	"preset"
+	{
+		"id"		"2"
+		"name"		"WeaponWheelControls"
+		"group_source_bindings"
+		{
+			"53"		"switch active"
+			"54"		"button_diamond active"
+			"55"		"left_trigger active"
+			"56"		"right_trigger active"
+			"62"		"gyro active"
 		}
 	}
 	"settings"
