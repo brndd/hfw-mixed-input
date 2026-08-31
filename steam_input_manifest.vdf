@@ -33,6 +33,11 @@
 					"title"		"#Move"
 					"input_mode"		"joystick_move"
 				}
+				"SteamTouchPad"
+				{
+					"title"		"#SteamTouchPad"
+					"input_mode"		"absolute_mouse"
+				}
 			}
 			"Button"
 			{
@@ -164,6 +169,11 @@
 					"title"		"#Move"
 					"input_mode"		"joystick_move"
 				}
+				"SteamTouchPad"
+				{
+					"title"		"#SteamTouchPad"
+					"input_mode"		"absolute_mouse"
+				}
 			}
 		}
 	}
@@ -268,6 +278,7 @@
 			"Navigate_HUD"		"Show HUD"
 			"MenuSet" "Options Menu"
 			"SteamTouchPad" "Touch Pad Look"
+			"WeaponWheelSet"		"Weapon Wheel"
 		}
 		"french"
 		{
@@ -352,6 +363,7 @@
 			"Navigate_HUD"		"Afficher ATH"
 			"MenuSet" "Menu Options"
 			"SteamTouchPad" "Vue pavé tactile"
+			"WeaponWheelSet"		"Roue des armes"
 		}
 		"spanish"
 		{
@@ -436,6 +448,7 @@
 			"Navigate_HUD"		"Mostrar HUD"
 			"MenuSet" "Menú de opciones"
 			"SteamTouchPad" "Mirar con el panel táctil"
+			"WeaponWheelSet"		"Rueda de armas"
 		}
 		"german"
 		{
@@ -520,6 +533,7 @@
 			"Navigate_HUD"		"HUD anzeigen"
 			"MenuSet" "Menü \'Optionen\'"
 			"SteamTouchPad" "Touchpad – Umsehen"
+			"WeaponWheelSet"		"Waffenrad"
 		}
 		"italian"
 		{
@@ -604,6 +618,7 @@
 			"Navigate_HUD"		"Mostra HUD"
 			"MenuSet" "Menu opzioni"
 			"SteamTouchPad" "Visuale touch pad"
+			"WeaponWheelSet"		"Ruota delle armi"
 		}
 		"dutch"
 		{
@@ -688,6 +703,7 @@
 			"Navigate_HUD"		"Scherminfo tonen"
 			"MenuSet" "Optiemenu"
 			"SteamTouchPad" "Kijken met touch pad"
+			"WeaponWheelSet"		"Wapencirkel"
 		}
 		"portuguese"
 		{
@@ -772,6 +788,7 @@
 			"Navigate_HUD"		"Mostrar interface"
 			"MenuSet" "Menu de opções"
 			"SteamTouchPad" "Visual do painel tátil"
+			"WeaponWheelSet"		"Seletor de armas"
 		}
 		"tchinese"
 		{
@@ -856,6 +873,7 @@
 			"Navigate_HUD"		"顯示HUD"
 			"MenuSet" "選項選單"
 			"SteamTouchPad" "觸碰板查看"
+			"WeaponWheelSet"		"武器輪盤"
 		}
 		"koreana"
 		{
@@ -940,6 +958,7 @@
 			"Navigate_HUD"		"HUD 표시"
 			"MenuSet" "설정 메뉴"
 			"SteamTouchPad" "터치패드로 보기"
+			"WeaponWheelSet"		"무기 휠"
 		}
 		"russian"
 		{
@@ -1024,6 +1043,7 @@
 			"Navigate_HUD"		"Показ интерфейса"
 			"MenuSet" "Меню параметров"
 			"SteamTouchPad" "Обзор сенсорной панелью"
+			"WeaponWheelSet"		"Меню оружия"
 		}
 		"polish"
 		{
@@ -1108,6 +1128,7 @@
 			"Navigate_HUD"		"Pokaż interfejs"
 			"MenuSet" "Menu opcji"
 			"SteamTouchPad" "Rozglądanie się panelem dotykowym"
+			"WeaponWheelSet"		"Koło broni"
 		}
 		"danish"
 		{
@@ -1192,6 +1213,7 @@
 			"Navigate_HUD"		"Vis HUD"
 			"MenuSet" "Indstillinger"
 			"SteamTouchPad" "Kig på touchpad"
+			"WeaponWheelSet"		"Våbenhjul"
 		}
 		"finnish"
 		{
@@ -1276,6 +1298,7 @@
 			"Navigate_HUD"		"Näytä HUD"
 			"MenuSet" "Asetusvalikko"
 			"SteamTouchPad" "Katso kosketusalueella"
+			"WeaponWheelSet"		"Asepyörä"
 		}
 		"norwegian"
 		{
@@ -1360,6 +1383,7 @@
 			"Navigate_HUD"		"Vis HUD"
 			"MenuSet" "Innstillinger"
 			"SteamTouchPad" "Se med styreplate"
+			"WeaponWheelSet"		"Våpenhjul"
 		}
 		"swedish"
 		{
@@ -1444,6 +1468,7 @@
 			"Navigate_HUD"		"Visa gränssnitt"
 			"MenuSet" "Alternativmeny"
 			"SteamTouchPad" "Titta med styrplattan"
+			"WeaponWheelSet"		"Vapenhjulet"
 		}
 		"japanese"
 		{
@@ -1528,6 +1553,7 @@
 			"Navigate_HUD"		"HUDを表示"
 			"MenuSet" "オプションメニュー"
 			"SteamTouchPad" "タッチパッドで見る"
+			"WeaponWheelSet"		"武器メニュー"
 		}
 		"latam"
 		{
@@ -1612,6 +1638,7 @@
 			"Navigate_HUD"		"Mostrar HUD"
 			"MenuSet" "Menú de opciones"
 			"SteamTouchPad" "Aspecto del touch pad"
+			"WeaponWheelSet"		"Rueda de armas"
 		}
 		"brazilian"
 		{
@@ -1696,6 +1723,7 @@
 			"Navigate_HUD"		"Mostrar Interface"
 			"MenuSet" "Menu de opções"
 			"SteamTouchPad" "Visual do Touch Pad"
+			"WeaponWheelSet"		"Menu de Armas"
 		}
 		"turkish"
 		{
@@ -1780,6 +1808,7 @@
 			"Navigate_HUD"		"Özel Göstergeleri Görüntüle"
 			"MenuSet"		"Seçenekler Menüsü"
 			"SteamTouchPad"		"Dokunmatik Yüzeyle Bakın"
+			"WeaponWheelSet"		"Silah Çarkı"
 		}
 		"arabic"
 		{
@@ -1864,6 +1893,7 @@
 			"Navigate_HUD"		"عرض واجهة المعلومات"
 			"MenuSet" "قائمة الخيارات"
 			"SteamTouchPad" "النظر عبر لوحة اللمس"
+			"WeaponWheelSet"		"عجلة السلاح"
 		}
 		"schinese"
 		{
@@ -1948,6 +1978,7 @@
 			"Navigate_HUD"		"显示平视显示器"
 			"MenuSet" "选项菜单"
 			"SteamTouchPad" "触摸板查看"
+			"WeaponWheelSet"		"武器轮盘"
 		}
 		"thai"
 		{
@@ -2032,6 +2063,7 @@
 			"Navigate_HUD"		"แสดง HUD"
 			"MenuSet"		"เมนูตัวเลือก"
 			"SteamTouchPad"		"มองด้วยทัชแพด"
+			"WeaponWheelSet"		"วงล้ออาวุธ"
 		}
 		"hungarian"
 		{
@@ -2116,6 +2148,7 @@
 			"Navigate_HUD"		"HUD megjelenítése"
 			"MenuSet"		"Beállítások menü"
 			"SteamTouchPad"		"Nézés érintőpaddal"
+			"WeaponWheelSet"		"Fegyvertárcsa"
 		}
 		"czech"
 		{
@@ -2200,6 +2233,7 @@
 			"Navigate_HUD"		"Zobrazit HUD"
 			"MenuSet"		"Nabídka možností"
 			"SteamTouchPad"		"Rozhlížení dotykovou ploškou"
+			"WeaponWheelSet"		"Kruhová nabídka zbraní"
 		}
 		"greek"
 		{
@@ -2284,6 +2318,7 @@
 			"Navigate_HUD"		"Εμφάνιση HUD"
 			"MenuSet"		"Μενού Επιλογών"
 			"SteamTouchPad"		"Κάμερα με Επιφάνεια Αφής"
+			"WeaponWheelSet"		"Τροχός Όπλων"
 		}
 	}
 }

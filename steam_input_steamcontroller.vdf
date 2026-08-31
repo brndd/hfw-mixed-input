@@ -602,6 +602,10 @@
 		{
 			"sensitivity"		"600"
 		}
+		"gameactions"
+		{
+			"InGameControls"		"SteamTouchPad"
+		}
 	}
 	"group"
 	{
@@ -740,7 +744,7 @@
 	"group"
 	{
 		"id"		"32"
-		"mode"		"gyro_to_mouse"
+		"mode"		"absolute_mouse"
 		"name"		""
 		"description"		""
 		"inputs"
@@ -748,10 +752,11 @@
 		}
 		"settings"
 		{
-			"flickstick_rotation_sensitivity"		"12800"
-			"gyro_on_off_haptic_intensity"		"1"
-			"haptic_intensity"		"1"
-			"flickstick_haptic_bump_per_angle"		"2"
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"InGameControls"		"SteamTouchPad"
 		}
 	}
 	"group"

@@ -6,12 +6,25 @@ Vibe reverse engineered and vibecoded mod to patch mixed input support into Hori
 
 Copy the following files into your game directory (where `HorizonForbiddenWest.exe` is located):
 - `version.dll`
+- `mixed_input_fix.ini`
 - `steam_input_manifest.vdf`
 - `steam_input_steamcontroller.vdf`
 
 Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm initialization (or just, you know, try it). Set in-game mouse sensitivity to 1.0 on all axis for best results with the built-in profile.
 
 If you're on Linux, set the game's launch options to `WINEDLLOVERRIDES="version=n,b" %command%` or else the DLL won't load. Yes you can run Gamescope and whatever other bells and whistles with this, just stick the WINEDLLOVERRIDES part at the very beginning of the command.
+
+## Configuration & Input Modes
+
+The mod's behavior can be configured via `mixed_input_fix.ini`:
+
+```ini
+[General]
+mode = siapi
+```
+
+- **`siapi`** *(Default & Recommended)*: Direct Steam Input API integration using native memory and camera hooks. Ingests trackpad deltas directly into camera components, handles automatic action set switching (InGame, Weapon Wheel layer, Menu), and supports full Photo Mode FreeCamera panning with both the trackpad and physical mouse (RMB held).
+- **`raw_mouse`** *(Legacy)*: Unblocks Decima's internal input samplers in `NxInputImpl` via 12 binary memory patches. Default to `siapi`, but switch to `raw_mouse` if `siapi` breaks on a newer game patch or if you really need regular physical mouse input simultaneously with gamepad locomotion for your specific usecase. In `raw_mouse` mode, Photo Mode stays on `MenuControls`.
 
 ## Game version support
 
@@ -31,18 +44,18 @@ The controller profile needs to have the following actionset IDs:
 
 The mod is hardcoded for these IDs and has hooks in the game's context manager to change the controller actionset.
 
-## Known Issues
-
-- Photo mode is broken a little. Mouse input does not work in it (normally you hold down right click and move the mouse to pan the camera) so the only way to pan the camera is with the right joystick.
-- Rarely the game loses track of the mouse and the camera starts spazzing out. To fix this, pause the game, unfocus the window (alt-tab) and then click back into it.
-
 ## Building from Source
 
-Requires `mingw-w64`:
+Requires CMake 3.25+ and `mingw-w64` C++ toolchain:
 
 ```bash
-make clean && make
+cmake -B build -DCMAKE_TOOLCHAIN_FILE=cmake/mingw64-toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+# Or build distributable zip package:
+cmake --build build --target package_zip
 ```
+
+The compiled output binary is located at `build/version.dll` and the distributable zip at `build/hfw-mixed-input-*.zip`.
 
 ## Slop warning
 
