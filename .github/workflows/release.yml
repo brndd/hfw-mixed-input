@@ -30,7 +30,9 @@ jobs:
 
       - name: Install MinGW toolchain
         run: |
+          sudo chmod 755 /home/runner
           mkdir -p /home/runner/apt-cache/partial
+          sudo chmod -R 777 /home/runner/apt-cache
           sudo apt-get update
           sudo apt-get -o Dir::Cache::Archives="/home/runner/apt-cache" install -y --no-install-recommends g++-mingw-w64-x86-64
           sudo chmod -R a+rwX /home/runner/apt-cache
