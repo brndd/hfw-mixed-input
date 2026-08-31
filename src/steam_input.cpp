@@ -136,7 +136,7 @@ bool init() {
         logger::info("Steam Input integration initialized (InGame: {:#x}, Menu: {:#x}, WeaponWheel: {:#x}, SteamTouchPad: {:#x})",
                      g_hInGame, g_hMenu, g_hWeaponWheel, g_hSteamTouchPad);
     } else {
-        logger::warn("Steam Input active profile has not provided action handles yet (InGame: 0, Menu: 0, WeaponWheel: 0).");
+        logger::debug("Steam Input active profile has not provided action handles yet (InGame: 0, Menu: 0, WeaponWheel: 0).");
     }
     return true;
 }
