@@ -1,14 +1,12 @@
 # Horizon Forbidden West: Mixed Input Fix
 
-Vibe reverse engineered and vibecoded mod to patch mixed input support into Horizon Forbidden West Complete Edition (Steam version). Enables the game to receive simultaneous controller and mouse input through Steam Input without shitting its pants. Intended for use with the Steam Controller and other such touchpad controllers.
+Vibe reverse engineered and vibecoded mod to patch mixed input support into Horizon Forbidden West Complete Edition (Steam version). Enables the game to receive simultaneous controller and mouse input through Steam Input without shitting its pants.
+
+Intended primarily for use with the Steam Controller and other such touchpad controllers. It can also be useful to get better gyro aiming on other controllers.
 
 ## Installation
 
-Copy the following files into your game directory (where `HorizonForbiddenWest.exe` is located):
-- `version.dll`
-- `mixed_input_fix.ini`
-- `steam_input_manifest.vdf`
-- `steam_input_steamcontroller.vdf`
+Copy the contents of the .zip into your game directory (where `HorizonForbiddenWest.exe` is located).
 
 Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm the patch works (or just, you know, try it).
 

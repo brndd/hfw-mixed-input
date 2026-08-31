@@ -76,19 +76,21 @@ set_target_properties(version PROPERTIES
 )
 
 # Package target
+file(GLOB VDF_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/vdf/*.vdf")
+
 set(DIST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/mixed_input_fix.ini
-    ${CMAKE_CURRENT_SOURCE_DIR}/steam_input_manifest.vdf
-    ${CMAKE_CURRENT_SOURCE_DIR}/steam_input_steamcontroller.vdf
+    ${VDF_FILES}
 )
 
 set(DIST_ZIP "${CMAKE_CURRENT_BINARY_DIR}/hfw-mixed-input-${MOD_VERSION}.zip")
 set(DIST_DIR "${CMAKE_CURRENT_BINARY_DIR}/dist")
 
 add_custom_target(package_zip
+    COMMAND ${CMAKE_COMMAND} -E rm -rf "${DIST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${DIST_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:version> ${DIST_FILES} "${DIST_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E chdir "${DIST_DIR}" ${CMAKE_COMMAND} -E tar cf "${DIST_ZIP}" --format=zip version.dll mixed_input_fix.ini steam_input_manifest.vdf steam_input_steamcontroller.vdf
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:version> ${DIST_FILES} "${DIST_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E chdir "${DIST_DIR}" ${CMAKE_COMMAND} -E tar cf "${DIST_ZIP}" --format=zip .
     DEPENDS version ${DIST_FILES}
     COMMENT "Building distributable zip: ${DIST_ZIP}"
     VERBATIM
