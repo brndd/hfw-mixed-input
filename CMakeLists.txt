@@ -76,12 +76,9 @@ set_target_properties(version PROPERTIES
 )
 
 # Package target
-file(GLOB VDF_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/vdf/*.vdf")
+file(GLOB ASSET_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/assets/*")
 
-set(DIST_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/mixed_input_fix.ini
-    ${VDF_FILES}
-)
+set(DIST_FILES ${ASSET_FILES})
 
 set(DIST_ZIP "${CMAKE_CURRENT_BINARY_DIR}/hfw-mixed-input-${MOD_VERSION}.zip")
 set(DIST_DIR "${CMAKE_CURRENT_BINARY_DIR}/dist")
