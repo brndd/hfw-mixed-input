@@ -47,6 +47,18 @@ Decima implements dual-device mutual exclusion across three separate tiers:
   - In `ProcessFreeCamSampleInputLook`, when `sensitivity[0] < 0.001f`, we scale trackpad deltas by `(FOV_scale * 40.0f)` before adding to `component + 0x140`.
   - This ensures trackpad sensitivity in Photo Mode is 100% consistent from the very first frame without requiring RMB to be clicked, while leaving physical mouse cursor and RMB capture under native Decima control.
 
+### Tier 5: Camera Damping & Spring-Arm Motion Pipeline
+- **`ThirdPersonPlayerCameraComponent::ApplyCameraLookDelta` (RVA `0x1194090`)**:
+  - Adds mouse/trackpad yaw deltas directly into `camera_angles.yaw` (`param_3 + 0x68`) without rate limiting.
+- **`ThirdPersonPlayerCameraComponent::SolveSpringArmCollision` (RVA `0x119A250`)**:
+  - Handles 3rd-person camera boom spatial orbit and collision avoidance relative to character skeleton.
+  - Implements an exponential damping curve on camera boom spatial position with damping coefficient `dt * 2.7725887` ($\Delta t \times \ln(16)$), causing visual ease-out lag when large instantaneous angular rotations occur.
+- **`CameraUtils::InterpAngleSpring` (RVA `0x11757B0`)**:
+  - Angular spring-damper interpolator with curve-based friction lookup (`0x6C2350`).
+  - Used by `ThirdPersonPlayerCameraComponent::UpdatePivotAndTargetOrientation` (`0x11920B0`) and `CameraTrackingModifier::Update` (`0x1198640`).
+- **`CameraTrackingModifier::Update` (RVA `0x1198640`)**:
+  - Automatically aligns camera heading with character movement velocity when manual input idle timer at `camera + 0x154` decays to zero.
+
 ---
 
 ## Executive Summary: Photo Mode Mixed Input Architecture & Resolution
