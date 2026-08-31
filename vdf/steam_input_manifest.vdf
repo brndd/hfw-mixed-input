@@ -9,11 +9,46 @@
 				"path" "steam_input_steamcontroller.vdf"
 			}
 		}
+		"controller_neptune"
+		{
+			"0"
+			{
+				"path" "steam_input_neptune.vdf"
+			}
+		}
 		"controller_ps4"
 		{
 			"0"
 			{
 				"path" "steam_input_ps4.vdf"
+			}
+		}
+		"controller_ps5"
+		{
+			"0"
+			{
+				"path" "steam_input_ps5.vdf"
+			}
+		}
+		"controller_switch_pro"
+		{
+			"0"
+			{
+				"path" "steam_input_switch_pro.vdf"
+			}
+		}
+		"controller_xbox360"
+		{
+			"0"
+			{
+				"path" "steam_input_xbox360.vdf"
+			}
+		}
+		"controller_xboxone"
+		{
+			"0"
+			{
+				"path" "steam_input_xboxone.vdf"
 			}
 		}
 	}
