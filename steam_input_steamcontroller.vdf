@@ -752,7 +752,6 @@
 		}
 		"settings"
 		{
-			"virtual_mode"		"1"
 		}
 		"gameactions"
 		{
@@ -1013,6 +1012,25 @@
 				{
 				}
 			}
+		}
+	}
+	"group"
+	{
+		"id"		"42"
+		"mode"		"absolute_mouse"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"gyro_natural_sensitivity"		"0"
+			"haptic_intensity"		"0"
+		}
+		"gameactions"
+		{
+			"InGameControls"		"SteamTouchPad"
 		}
 	}
 	"group"
@@ -1408,6 +1426,7 @@
 			"7"		"left_trigger active"
 			"8"		"right_trigger active"
 			"34"		"right_trackpad active"
+			"42"		"gyro active"
 		}
 	}
 	"settings"
