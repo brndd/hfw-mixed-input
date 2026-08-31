@@ -431,106 +431,6 @@
 	}
 	"group"
 	{
-		"id"		"11"
-		"mode"		"joystick_mouse"
-		"name"		""
-		"description"		""
-		"inputs"
-		{
-		}
-		"settings"
-		{
-			"output_joystick"		"2"
-		}
-	}
-	"group"
-	{
-		"id"		"18"
-		"mode"		"joystick_move"
-		"name"		""
-		"description"		""
-		"inputs"
-		{
-		}
-	}
-	"group"
-	{
-		"id"		"19"
-		"mode"		"joystick_move"
-		"name"		""
-		"description"		""
-		"inputs"
-		{
-		}
-		"settings"
-		{
-			"virtual_mode"		"1"
-		}
-	}
-	"group"
-	{
-		"id"		"25"
-		"mode"		"joystick_move"
-		"name"		""
-		"description"		""
-		"inputs"
-		{
-			"click"
-			{
-				"activators"
-				{
-					"Full_Press"
-					{
-						"bindings"
-						{
-							"binding"		"game_action InGameControls 6a8099b1-fb02-11e9-9ad2-6c2b59c965b6, , "
-						}
-					}
-				}
-				"disabled_activators"
-				{
-				}
-			}
-		}
-		"settings"
-		{
-			"virtual_mode"		"1"
-		}
-	}
-	"group"
-	{
-		"id"		"26"
-		"mode"		"joystick_mouse"
-		"name"		""
-		"description"		""
-		"inputs"
-		{
-			"click"
-			{
-				"activators"
-				{
-					"Full_Press"
-					{
-						"bindings"
-						{
-							"binding"		"game_action InGameControls 6a80729f-fb02-11e9-9707-6c2b59c965b6, , "
-						}
-					}
-				}
-				"disabled_activators"
-				{
-				}
-			}
-		}
-		"settings"
-		{
-			"virtual_mode"		"1"
-			"output_joystick"		"2"
-			"sensitivity"		"100"
-		}
-	}
-	"group"
-	{
 		"id"		"32"
 		"mode"		"dpad"
 		"name"		""
@@ -684,68 +584,6 @@
 				{
 				}
 			}
-		}
-	}
-	"group"
-	{
-		"id"		"34"
-		"mode"		"2dscroll"
-		"name"		""
-		"description"		""
-		"inputs"
-		{
-		}
-	}
-	"group"
-	{
-		"id"		"38"
-		"mode"		"absolute_mouse"
-		"name"		""
-		"description"		""
-		"inputs"
-		{
-		}
-	}
-	"group"
-	{
-		"id"		"41"
-		"mode"		"joystick_mouse"
-		"name"		""
-		"description"		""
-		"inputs"
-		{
-			"click"
-			{
-				"activators"
-				{
-					"Full_Press"
-					{
-						"bindings"
-						{
-							"binding"		"game_action InGameControls 6a80729f-fb02-11e9-9707-6c2b59c965b6, , "
-						}
-					}
-					"Full_Press"
-					{
-						"bindings"
-						{
-							"binding"		"game_action InGameControls 6a7f8841-fb02-11e9-9825-6c2b59c965b6, , "
-						}
-					}
-				}
-				"disabled_activators"
-				{
-				}
-			}
-		}
-		"settings"
-		{
-			"virtual_mode"		"1"
-			"output_joystick"		"2"
-		}
-		"gameactions"
-		{
-			"InGameControls"		"Look"
 		}
 	}
 	"group"
@@ -974,18 +812,10 @@
 			"1"		"button_diamond active"
 			"2"		"left_trigger active"
 			"3"		"right_trigger active"
-			"11"		"right_joystick inactive"
-			"18"		"right_joystick inactive"
-			"26"		"right_joystick inactive"
-			"41"		"right_joystick inactive"
 			"45"		"right_joystick active"
-			"19"		"joystick inactive"
-			"25"		"joystick inactive"
 			"42"		"joystick active"
 			"33"		"center_trackpad active"
-			"34"		"center_trackpad inactive"
 			"32"		"dpad active"
-			"38"		"gyro inactive"
 			"48"		"gyro active"
 		}
 	}
