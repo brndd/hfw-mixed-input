@@ -21,10 +21,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cache MinGW APT Packages
+        id: apt-cache
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-mingw-x86-64-v1
+
       - name: Install MinGW toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++-mingw-w64-x86-64 ninja-build
+          sudo apt-get install -y --no-install-recommends g++-mingw-w64-x86-64
 
       - name: Determine Version
         id: version
