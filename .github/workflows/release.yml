@@ -60,14 +60,14 @@ jobs:
       - name: Upload Artifacts (Actions)
         uses: actions/upload-artifact@v4
         with:
-          name: hfw-mixed-input-${{ env.TAG_NAME }}
+          name: hfw-mixed-input
           path: |
-            build/hfw-mixed-input-${{ env.TAG_NAME }}.zip
+            build/hfw-mixed-input.zip
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            build/hfw-mixed-input-${{ env.TAG_NAME }}.zip
+            build/hfw-mixed-input.zip
           generate_release_notes: true
