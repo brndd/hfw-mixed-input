@@ -12,7 +12,7 @@ Copy the contents of the .zip into your game directory (where `HorizonForbiddenW
 
 Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm the patch works (or just, you know, try it).
 
-**Set in-game mouse sensitivity to 1.0 on both axis for best results with the built-in profile.** Due to the way we override the default profile/controller manifest, the modified default profile with the custom ActionSets will only appear in the Steam controller bindings interface after the game has been run with this mod once for the current Steam session, and will reset back to the developer default profile when Steam is restarted.
+**Set in-game mouse sensitivity to 1.0 on both axis for best results with the built-in profile.** Due to the way we override the default controller manifest, the modified profiles with the custom ActionSets will only appear in the Steam controller bindings interface after the game has been run with this mod once for the current Steam session, and will reset back to the developer default profiles when Steam is restarted.
 
 If you're on Linux, set the game's launch options to `WINEDLLOVERRIDES="version=n,b" %command%` or else the DLL won't load. Yes you can run Gamescope and whatever other bells and whistles with this, just stick the WINEDLLOVERRIDES part at the very beginning of the command.
 
