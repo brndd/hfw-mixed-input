@@ -1,6 +1,8 @@
 #include "steam_input.hpp"
 #include "logger.hpp"
 #include "config.hpp"
+#include "scanner.hpp"
+#include <safetyhook.hpp>
 #include <windows.h>
 #include <array>
 #include <cstring>
@@ -44,6 +46,9 @@ static SteamAPI_ISteamInput_GetAnalogActionData_fn fn_GetAnalogActionData = null
 static void* g_pSteamInput = nullptr;
 static bool g_siapi_ready = false;
 
+static safetyhook::MidHook g_hook_steam_init;
+static safetyhook::MidHook g_hook_steam_post_init;
+
 enum ContextFlags : uint32_t {
     CTX_MENU = 1 << 0,
     CTX_LETTERBOX = 1 << 1,
@@ -67,20 +72,11 @@ static InputActionSetHandle_t g_hMenu = 0;
 static InputActionSetHandle_t g_hWeaponWheel = 0;
 static InputAnalogActionHandle_t g_hSteamTouchPad = 0;
 
-static uint64_t s_last_init_attempt_ms = 0;
-
-static uint64_t get_tick_ms() {
-    return GetTickCount64();
-}
-
-bool init() {
-    s_last_init_attempt_ms = get_tick_ms();
+static void resolve_steam_api() {
+    if (fn_GetConnectedControllers) return;
 
     HMODULE hSteamApi = GetModuleHandleA("steam_api64.dll");
-    if (!hSteamApi) {
-        logger::debug("[SIAPI] steam_api64.dll is not yet loaded.");
-        return false;
-    }
+    if (!hSteamApi) return;
 
     fn_SteamInput = reinterpret_cast<SteamAPI_SteamInput_v006_fn>(GetProcAddress(hSteamApi, "SteamAPI_SteamInput_v006"));
     fn_Init = reinterpret_cast<SteamAPI_ISteamInput_Init_fn>(GetProcAddress(hSteamApi, "SteamAPI_ISteamInput_Init"));
@@ -92,37 +88,28 @@ bool init() {
     fn_DeactivateActionSetLayer = reinterpret_cast<SteamAPI_ISteamInput_DeactivateActionSetLayer_fn>(GetProcAddress(hSteamApi, "SteamAPI_ISteamInput_DeactivateActionSetLayer"));
     fn_GetAnalogActionHandle = reinterpret_cast<SteamAPI_ISteamInput_GetAnalogActionHandle_fn>(GetProcAddress(hSteamApi, "SteamAPI_ISteamInput_GetAnalogActionHandle"));
     fn_GetAnalogActionData = reinterpret_cast<SteamAPI_ISteamInput_GetAnalogActionData_fn>(GetProcAddress(hSteamApi, "SteamAPI_ISteamInput_GetAnalogActionData"));
+}
 
-    if (!fn_SteamInput || !fn_GetConnectedControllers || !fn_GetActionSetHandle ||
-        !fn_ActivateActionSet || !fn_ActivateActionSetLayer || !fn_DeactivateActionSetLayer) {
-        logger::error("[SIAPI] Failed to resolve SteamInput API functions in steam_api64.dll.");
-        return false;
-    }
-
-    g_pSteamInput = fn_SteamInput();
-    if (!g_pSteamInput) {
-        logger::debug("[SIAPI] SteamAPI_SteamInput_v006() returned null.");
-        return false;
-    }
-
-    // Set manifest path to both absolute and relative paths for compatibility
+static void apply_manifest_path(void* pSteamInput) {
+    if (!pSteamInput) return;
+    resolve_steam_api();
     if (fn_SetInputActionManifestFilePath) {
         char manifest_path[MAX_PATH] = {0};
         if (GetCurrentDirectoryA(MAX_PATH, manifest_path)) {
             strcat(manifest_path, "\\steam_input_manifest.vdf");
-            bool set_res = fn_SetInputActionManifestFilePath(g_pSteamInput, manifest_path);
-            logger::debug("[SIAPI] SetInputActionManifestFilePath(\"{}\") -> {}", manifest_path, set_res);
+            bool set_res = fn_SetInputActionManifestFilePath(pSteamInput, manifest_path);
+            logger::info("[SIAPI] SetInputActionManifestFilePath(\"{}\") -> {}", manifest_path, set_res);
         } else {
-            fn_SetInputActionManifestFilePath(g_pSteamInput, "steam_input_manifest.vdf");
+            fn_SetInputActionManifestFilePath(pSteamInput, "steam_input_manifest.vdf");
         }
     }
+}
 
-    if (fn_Init) {
-        bool init_res = fn_Init(g_pSteamInput, false);
-        logger::debug("[SIAPI] SteamAPI_ISteamInput_Init(false) -> {}", init_res);
-    }
+static void resolve_action_handles() {
+    if (!g_pSteamInput) return;
+    resolve_steam_api();
+    if (!fn_GetActionSetHandle) return;
 
-    // Resolve exact canonical action set and layer handles
     g_hInGame = fn_GetActionSetHandle(g_pSteamInput, "InGameControls");
     g_hMenu = fn_GetActionSetHandle(g_pSteamInput, "MenuControls");
     g_hWeaponWheel = fn_GetActionSetHandle(g_pSteamInput, "WeaponWheelControls");
@@ -130,24 +117,74 @@ bool init() {
         g_hSteamTouchPad = fn_GetAnalogActionHandle(g_pSteamInput, "SteamTouchPad");
     }
 
-    g_siapi_ready = true;
-
-    if (g_hInGame || g_hMenu || g_hWeaponWheel) {
+    if (g_hInGame || g_hMenu || g_hWeaponWheel || g_hSteamTouchPad) {
+        g_siapi_ready = true;
         logger::info("Steam Input integration initialized (InGame: {:#x}, Menu: {:#x}, WeaponWheel: {:#x}, SteamTouchPad: {:#x})",
                      g_hInGame, g_hMenu, g_hWeaponWheel, g_hSteamTouchPad);
-    } else {
-        logger::debug("Steam Input active profile has not provided action handles yet (InGame: 0, Menu: 0, WeaponWheel: 0).");
     }
+}
+
+// ---------------------------------------------------------------------------
+// Native Decima SteamInput::Init Detours (0x1400895CD)
+// ---------------------------------------------------------------------------
+static void midhook_decima_steam_input_init(safetyhook::Context& ctx) {
+    g_pSteamInput = reinterpret_cast<void*>(ctx.rcx);
+    apply_manifest_path(g_pSteamInput);
+}
+
+static void midhook_decima_steam_input_post_init(safetyhook::Context& ctx) {
+    (void)ctx;
+    resolve_action_handles();
+}
+
+bool init() {
+    HMODULE main_module = GetModuleHandleA(nullptr);
+    if (!main_module) return false;
+
+    auto text_region = scanner::get_module_section(main_module, ".text");
+    if (!text_region) {
+        text_region = scanner::get_module_section(main_module, "");
+    }
+    if (!text_region) return false;
+
+    // Pattern for Decima's SteamInput::Init in FUN_140089390 (0x1400895CD)
+    const char* sig_init = "48 8B 01 B2 01 FF 10 0F B6 D8 C6 05 ?? ?? ?? ?? 01 48 8D 05";
+    uint8_t* match = scanner::scan(*text_region, sig_init);
+    if (match) {
+        g_hook_steam_init = safetyhook::create_mid(match, midhook_decima_steam_input_init);
+        g_hook_steam_post_init = safetyhook::create_mid(match + 7, midhook_decima_steam_input_post_init);
+        if (g_hook_steam_init && g_hook_steam_post_init) {
+            logger::debug("Hooked Decima native SteamInput::Init at {:#x}", reinterpret_cast<uintptr_t>(match));
+        } else {
+            logger::warn("Failed to install Decima SteamInput::Init hook");
+        }
+    } else {
+        logger::warn("Failed to find Decima SteamInput::Init signature");
+    }
+
+    // Fallback in case Decima already initialized before hook setup
+    resolve_steam_api();
+    if (fn_SteamInput && !g_pSteamInput) {
+        g_pSteamInput = fn_SteamInput();
+        if (g_pSteamInput) {
+            apply_manifest_path(g_pSteamInput);
+            resolve_action_handles();
+        }
+    }
+
     return true;
 }
 
 static void ensure_siapi_ready() {
-    if (!g_siapi_ready || !g_pSteamInput || (!g_hMenu && !g_hWeaponWheel)) {
-        uint64_t now = get_tick_ms();
-        // Rate-limit retry attempts to at most once every 3 seconds to avoid spamming transitions
-        if (now - s_last_init_attempt_ms >= 3000) {
-            init();
+    if (!g_siapi_ready || !g_pSteamInput) {
+        resolve_steam_api();
+        if (fn_SteamInput && !g_pSteamInput) {
+            g_pSteamInput = fn_SteamInput();
+            if (g_pSteamInput) {
+                apply_manifest_path(g_pSteamInput);
+            }
         }
+        resolve_action_handles();
     }
 }
 
