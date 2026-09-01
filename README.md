@@ -12,7 +12,7 @@ Copy the contents of the .zip into your game directory (where `HorizonForbiddenW
 
 Launch the game through Steam. Check `mixed_input_fix.log` in the game directory to confirm the patch works (or just, you know, try it).
 
-**Set in-game mouse sensitivity to 1.0 on both axis for best results with the built-in profile.** Due to the way we override the default profile/controller manifest, the modified default profile with the custom ActionSets might only be visible while the game is running.
+**Set in-game mouse sensitivity to 1.0 on both axis for best results with the built-in profile.** Due to the way we override the default profile/controller manifest, the modified default profile with the custom ActionSets will only appear in the Steam controller bindings interface after the game has been run with this mod once for the current Steam session, and will reset back to the developer default profile when Steam is restarted.
 
 If you're on Linux, set the game's launch options to `WINEDLLOVERRIDES="version=n,b" %command%` or else the DLL won't load. Yes you can run Gamescope and whatever other bells and whistles with this, just stick the WINEDLLOVERRIDES part at the very beginning of the command.
 
@@ -44,7 +44,7 @@ This is completely built around Steam Input. No it will not work with the EGS ve
 
 Profiles for all major controllers are bundled. However, only the Steam Controller and PS4 profiles have been tested; the rest are experimental. Pull requests and device donations welcome.
 
-To add your own profile locally, you can edit `steam_input_manifest.vdf` and configure a new `steam_input_<controller>.vdf` near the top, then put your actual controller config in that file. Look at the existing ones in `assets/` for examples. You can also use Steam's controller configuration GUI to create these, but the controls may not appear right there if the manifest doesn't already provide a config for your controller.
+To add your own profile locally, run the game with the mod once to load the custom input manifest. The custom ActionSets and controls will then appear in the Steam controller configuration UI until Steam is restarted. They reset to developer defaults when Steam is restarted, but any customizations you make will be preserved.
 
 The controller profile needs to have the following ActionSet IDs:
 
