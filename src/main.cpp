@@ -6,33 +6,11 @@
 #include "patches.hpp"
 #include "camera_hook.hpp"
 #include "context_hook.hpp"
+#include "steam_input.hpp"
 
 #ifndef MOD_VERSION
 #define MOD_VERSION "v0.3-custom"
 #endif
-
-namespace mod {
-
-static DWORD WINAPI init_thread(LPVOID) {
-    // Brief pause for early CRT / module load stabilization
-    Sleep(200);
-
-    logger::info("=== Mixed Input Fix {} Initialized ===", MOD_VERSION);
-
-    if (config::g_config.mode == config::InputMode::Siapi) {
-        if (!camera::init()) {
-            logger::error("Failed to initialize SIAPI camera hook.");
-        }
-    }
-
-    if (!context::init()) {
-        logger::error("Failed to initialize Decima context hook.");
-    }
-
-    return 0;
-}
-
-} // namespace mod
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
     (void)hinstDLL;
@@ -48,7 +26,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
             return FALSE;
         }
 
-        // Apply static memory patches synchronously before game initialization
+        mod::logger::info("=== Mixed Input Fix {} Initialized ===", MOD_VERSION);
+
+        // 1. Mode configuration & hooks
         if (mod::config::g_config.mode == mod::config::InputMode::RawMouse) {
             mod::logger::info("Active Mode: RAW_MOUSE");
             if (!mod::patches::apply_all_patches()) {
@@ -56,8 +36,17 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
             }
         } else {
             mod::logger::info("Active Mode: SIAPI");
+            if (!mod::camera::init()) {
+                mod::logger::error("Failed to initialize SIAPI camera hook.");
+            }
         }
 
+        // 2. Steam Input integration (active in both modes for ActionSet switching & manifest handling)
+        if (!mod::steam::init()) {
+            mod::logger::error("Failed to initialize Steam Input hook.");
+        }
+
+        // 3. Mouse smoothing patch
         if (mod::config::g_config.disable_mouse_smoothing) {
             mod::logger::info("Mouse Smoothing Patch enabled (engine mouse smoothing disabled)");
             if (!mod::patches::apply_mouse_smoothing_patch()) {
@@ -67,11 +56,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
             mod::logger::info("Mouse Smoothing Patch disabled (untouched engine behavior)");
         }
 
-        // Spawn background worker for hooks that depend on runtime module loading (Steam API, Camera, Context)
-        if (HANDLE thread = CreateThread(nullptr, 0, mod::init_thread, nullptr, 0, nullptr); thread) {
-            CloseHandle(thread);
-        } else {
-            mod::logger::error("Failed to create background initialization thread!");
+        // 4. Decima action context hook
+        if (!mod::context::init()) {
+            mod::logger::error("Failed to initialize Decima context hook.");
         }
         break;
 

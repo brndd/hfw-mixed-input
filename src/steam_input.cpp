@@ -46,9 +46,6 @@ static SteamAPI_ISteamInput_GetAnalogActionData_fn fn_GetAnalogActionData = null
 static void* g_pSteamInput = nullptr;
 static bool g_siapi_ready = false;
 
-static safetyhook::MidHook g_hook_steam_init;
-static safetyhook::MidHook g_hook_steam_post_init;
-
 enum ContextFlags : uint32_t {
     CTX_MENU = 1 << 0,
     CTX_LETTERBOX = 1 << 1,
@@ -95,46 +92,57 @@ static void apply_manifest_path(void* pSteamInput) {
     resolve_steam_api();
     if (fn_SetInputActionManifestFilePath) {
         char manifest_path[MAX_PATH] = {0};
-        if (GetCurrentDirectoryA(MAX_PATH, manifest_path)) {
-            strcat(manifest_path, "\\steam_input_manifest.vdf");
-            bool set_res = fn_SetInputActionManifestFilePath(pSteamInput, manifest_path);
-            logger::info("[SIAPI] SetInputActionManifestFilePath(\"{}\") -> {}", manifest_path, set_res);
-        } else {
-            fn_SetInputActionManifestFilePath(pSteamInput, "steam_input_manifest.vdf");
+        DWORD len = GetModuleFileNameA(GetModuleHandleA(nullptr), manifest_path, MAX_PATH);
+        if (len > 0) {
+            char* last_slash = strrchr(manifest_path, '\\');
+            if (!last_slash) last_slash = strrchr(manifest_path, '/');
+            if (last_slash) {
+                *(last_slash + 1) = '\0';
+                strcat(manifest_path, "steam_input_manifest.vdf");
+                bool set_res = fn_SetInputActionManifestFilePath(pSteamInput, manifest_path);
+                logger::info("[SIAPI] SetInputActionManifestFilePath(\"{}\") -> {}", manifest_path, set_res);
+                return;
+            }
         }
+        fn_SetInputActionManifestFilePath(pSteamInput, "steam_input_manifest.vdf");
     }
 }
 
 static void resolve_action_handles() {
+    static bool s_handles_resolved = false;
+    if (s_handles_resolved) return;
     if (!g_pSteamInput) return;
     resolve_steam_api();
     if (!fn_GetActionSetHandle) return;
 
-    g_hInGame = fn_GetActionSetHandle(g_pSteamInput, "InGameControls");
-    g_hMenu = fn_GetActionSetHandle(g_pSteamInput, "MenuControls");
-    g_hWeaponWheel = fn_GetActionSetHandle(g_pSteamInput, "WeaponWheelControls");
-    if (fn_GetAnalogActionHandle) {
+    if (!g_hInGame) g_hInGame = fn_GetActionSetHandle(g_pSteamInput, "InGameControls");
+    if (!g_hMenu) g_hMenu = fn_GetActionSetHandle(g_pSteamInput, "MenuControls");
+    if (!g_hWeaponWheel) g_hWeaponWheel = fn_GetActionSetHandle(g_pSteamInput, "WeaponWheelControls");
+    if (!g_hSteamTouchPad && fn_GetAnalogActionHandle) {
         g_hSteamTouchPad = fn_GetAnalogActionHandle(g_pSteamInput, "SteamTouchPad");
     }
 
     if (g_hInGame || g_hMenu || g_hWeaponWheel || g_hSteamTouchPad) {
+        s_handles_resolved = true;
         g_siapi_ready = true;
         logger::info("Steam Input integration initialized (InGame: {:#x}, Menu: {:#x}, WeaponWheel: {:#x}, SteamTouchPad: {:#x})",
                      g_hInGame, g_hMenu, g_hWeaponWheel, g_hSteamTouchPad);
+
+        if (config::g_config.mode == config::InputMode::Siapi && !g_hSteamTouchPad) {
+            logger::error("Failed to resolve 'SteamTouchPad' analog action handle in SIAPI mode. Trackpad look will not function. Ensure steam_input_manifest.vdf is installed in the game directory.");
+        }
     }
 }
 
 // ---------------------------------------------------------------------------
-// Native Decima SteamInput::Init Detours (0x1400895CD)
+// Native Decima SteamInput::Init Interception (0x1400895CD)
 // ---------------------------------------------------------------------------
+static safetyhook::MidHook g_hook_steam_init;
+
 static void midhook_decima_steam_input_init(safetyhook::Context& ctx) {
     g_pSteamInput = reinterpret_cast<void*>(ctx.rcx);
     apply_manifest_path(g_pSteamInput);
-}
-
-static void midhook_decima_steam_input_post_init(safetyhook::Context& ctx) {
-    (void)ctx;
-    resolve_action_handles();
+    g_siapi_ready = true;
 }
 
 bool init() {
@@ -152,8 +160,7 @@ bool init() {
     uint8_t* match = scanner::scan(*text_region, sig_init);
     if (match) {
         g_hook_steam_init = safetyhook::create_mid(match, midhook_decima_steam_input_init);
-        g_hook_steam_post_init = safetyhook::create_mid(match + 7, midhook_decima_steam_input_post_init);
-        if (g_hook_steam_init && g_hook_steam_post_init) {
+        if (g_hook_steam_init) {
             logger::debug("Hooked Decima native SteamInput::Init at {:#x}", reinterpret_cast<uintptr_t>(match));
         } else {
             logger::warn("Failed to install Decima SteamInput::Init hook");
@@ -162,40 +169,19 @@ bool init() {
         logger::warn("Failed to find Decima SteamInput::Init signature");
     }
 
-    // Fallback in case Decima already initialized before hook setup
-    resolve_steam_api();
-    if (fn_SteamInput && !g_pSteamInput) {
-        g_pSteamInput = fn_SteamInput();
-        if (g_pSteamInput) {
-            apply_manifest_path(g_pSteamInput);
-            resolve_action_handles();
-        }
-    }
-
     return true;
-}
-
-static void ensure_siapi_ready() {
-    if (!g_siapi_ready || !g_pSteamInput) {
-        resolve_steam_api();
-        if (fn_SteamInput && !g_pSteamInput) {
-            g_pSteamInput = fn_SteamInput();
-            if (g_pSteamInput) {
-                apply_manifest_path(g_pSteamInput);
-            }
-        }
-        resolve_action_handles();
-    }
 }
 
 bool get_touchpad_delta(float* out_x, float* out_y) {
     if (out_x) *out_x = 0.0f;
     if (out_y) *out_y = 0.0f;
 
-    ensure_siapi_ready();
-    if (!g_siapi_ready || !g_pSteamInput || !g_hSteamTouchPad || !fn_GetAnalogActionData) {
-        return false;
+    if (!g_siapi_ready || !g_pSteamInput) return false;
+    if (!g_hSteamTouchPad) {
+        resolve_action_handles();
+        if (!g_hSteamTouchPad) return false;
     }
+    if (!fn_GetAnalogActionData || !fn_GetConnectedControllers) return false;
 
     std::array<InputHandle_t, 16> controllers{};
     int count = fn_GetConnectedControllers(g_pSteamInput, controllers.data());
@@ -226,8 +212,13 @@ static bool calculate_in_menu_state(uint32_t mask) {
 
 void on_context_change(std::string_view context_name, bool enabled) {
     if (context_name.empty()) return;
-    ensure_siapi_ready();
     if (!g_siapi_ready || !g_pSteamInput) return;
+
+    if (!g_hMenu || !g_hInGame) {
+        resolve_action_handles();
+    }
+
+    if (!fn_GetConnectedControllers) return;
 
     std::array<InputHandle_t, 16> controllers{};
     int count = fn_GetConnectedControllers(g_pSteamInput, controllers.data());

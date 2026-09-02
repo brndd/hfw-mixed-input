@@ -13,19 +13,22 @@ static safetyhook::InlineHook g_hook_disable_context;
 
 static const char* safe_get_context_name(void* context_desc) {
     if (!context_desc) return nullptr;
-    if (IsBadReadPtr(context_desc, 1)) return nullptr;
+
+    auto addr = reinterpret_cast<uintptr_t>(context_desc);
+    // User-mode pointer range sanity check
+    if (addr < 0x10000 || addr > 0x7FFFFFFFFFFF) return nullptr;
 
     const char* str = static_cast<const char*>(context_desc);
-    for (int i = 0; i < 4; ++i) {
-        if (str[i] == '\0') {
-            if (i == 0) return nullptr;
-            break;
+    for (int i = 0; i < 64; ++i) {
+        char c = str[i];
+        if (c == '\0') {
+            return (i > 0) ? str : nullptr;
         }
-        if (!isprint(static_cast<unsigned char>(str[i])) && str[i] != '_') {
+        if (!isprint(static_cast<unsigned char>(c)) && c != '_' && c != ' ') {
             return nullptr;
         }
     }
-    return str;
+    return nullptr;
 }
 
 static void hook_enable_context(void* this_ptr, void* context_desc) {
@@ -53,37 +56,21 @@ bool init() {
     auto text_region = scanner::get_module_section(main_module, ".text");
     if (!text_region) return false;
 
-    // Signature for NxInputImpl_UpdateGamepadActiveContext
-    const char* sig = "48 89 5C 24 08 57 48 83 EC 20 48 8B 01 48 8B FA 48 8B 1D";
-    uint8_t* match = scanner::scan(*text_region, sig);
-    if (!match) {
-        logger::error("Failed to find signature for NxInputImpl_UpdateGamepadActiveContext!");
+    // Direct signatures for EnableContext (0x140081960) and DisableContext (0x140081A10)
+    const char* sig_enable = "48 89 5C 24 08 57 48 83 EC 20 48 8B 01 48 8B FA 48 8B D9 FF 50 60 48 8B D0 48 85 C0 75 29";
+    const char* sig_disable = "48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B 01 41 0F B6 F0 48 8B FA 48 8B D9 FF 50 60";
+
+    uint8_t* match_enable = scanner::scan(*text_region, sig_enable);
+    uint8_t* match_disable = scanner::scan(*text_region, sig_disable);
+
+    if (!match_enable || !match_disable) {
+        logger::error("Failed to find signature for EnableContext / DisableContext! (enable: {:p}, disable: {:p})",
+                      static_cast<void*>(match_enable), static_cast<void*>(match_disable));
         return false;
     }
 
-    uint8_t* mov_instr = match + 16;
-    int32_t disp = *reinterpret_cast<int32_t*>(mov_instr + 3);
-    void** pp_gameState = reinterpret_cast<void**>(mov_instr + 7 + disp);
-
-    int retries = 50;
-    while (!*pp_gameState && retries > 0) {
-        Sleep(50);
-        retries--;
-    }
-
-    if (!*pp_gameState) {
-        logger::error("g_pNxGameStateImpl singleton was not initialized in time.");
-        return false;
-    }
-
-    void* gameState = *pp_gameState;
-    void** vtable = *reinterpret_cast<void***>(gameState);
-
-    void* target_enable = vtable[15];
-    void* target_disable = vtable[17];
-
-    auto res_enable = safetyhook::InlineHook::create(target_enable, hook_enable_context);
-    auto res_disable = safetyhook::InlineHook::create(target_disable, hook_disable_context);
+    auto res_enable = safetyhook::InlineHook::create(match_enable, hook_enable_context);
+    auto res_disable = safetyhook::InlineHook::create(match_disable, hook_disable_context);
 
     if (!res_enable || !res_disable) {
         logger::error("Failed to hook EnableContext / DisableContext via SafetyHook!");
@@ -93,9 +80,9 @@ bool init() {
     g_hook_enable_context = std::move(*res_enable);
     g_hook_disable_context = std::move(*res_disable);
 
-    logger::debug("Installed SafetyHook at EnableContext ({:p}) and DisableContext ({:p})", target_enable, target_disable);
+    logger::debug("Installed SafetyHook at EnableContext ({:p}) and DisableContext ({:p})",
+                  static_cast<void*>(match_enable), static_cast<void*>(match_disable));
 
-    steam::init();
     return true;
 }
 
