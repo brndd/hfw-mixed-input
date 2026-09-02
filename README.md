@@ -29,7 +29,7 @@ disable_mouse_smoothing = false
 - **`mode`**:
   - **`siapi`** *(Recommended)*: Direct Steam Input API integration using a custom SteamTouchPad control, similar to Horizon Zero Dawn Remastered. This has the advantage of stopping the cursor from wandering off-screen during cutscenes and dialogue that don't lock it, plus it has proper support for Photo Mode.
   - **`raw_mouse`** *(Legacy)*: Unblocks simultaneous raw mouse & controller input. This is useful if you for some reason want to use your actual mouse together with a controller, or if you want to keep the Steam Controller touchpad in raw mouse mode, or if the SIAPI patch just doesn't work for some reason. The downside is poor Photo Mode support and a few more edge cases.
-    - **Note:** if using raw_mouse with a Steam Controller, the provided controller profile won't work for you and you must change the controller settings to put the touchpad and gyro in mouse mode yourself.
+    - **Note:** in raw mouse mode the provided controller profile won't work, and you must change the controller settings to put the touchpad and gyro in mouse mode yourself.
 - **`disable_mouse_smoothing`**: The game has a slight unconfigurable mouse smoothing/filtering effect. This allows disabling it.
   - **`false`** *(Default)*: Mouse smoothing remains active.
   - **`true`**: Mouse smoothing is disabled.
